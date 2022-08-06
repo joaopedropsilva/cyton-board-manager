@@ -1,0 +1,81 @@
+to select a specific board you need to pass BrainFlow’s board id to BoardShim’s
+constructor and an instance of BrainFlowInputParams structure;
+
+
+!BoardShim
+
+#Add streamer
+add_streamer(streamer_params: str, preset: int = <BrainFlowPresets.DEFAULT_PRESET: 0>) → None
+#Param:
+    + preset (int) – preset
+    + parameter to stream data from brainflow, supported vals (streamer_params) – “file://%file_name%:w”, “file://%file_name%:a”,
+      “streaming_board://%multicast_group_ip%:%port%”. Range for multicast addresses is from “224.0.0.0” to “239.255.255.255”
+
+#Start streaming data, this methods stores data in ringbuffer
+start_stream(num_samples: int = 450000, streamer_params: str = None) → None
+
+#Stop streaming data
+stop_stream() → None
+
+#release all resources
+release_session() → None
+
+#Get’s the actual board id, can be different than provided
+get_board_id() → int
+
+#Check if session is ready or not
+is_prepared() → bool
+
+#Get board data and remove data from ringbuffer
+get_board_data()
+#Return type: NDArray[Float64]
+
+
+!Datafilter
+
+DataFilter class contains methods for signal processig
+
+#apply low pass filter to provided data
+perform_lowpass()
+#Param
+    + data (NDArray[Float64]) – data to filter, filter works in-place
+    + sampling_rate (int) – board’s sampling rate (Taxa de amostragem)
+    + cutoff (float) – cutoff frequency
+    + order (int) – filter order
+    + filter_type (int) – filter type from special enum (Ver "brainflow.data_filter.FilterTypes")
+    + ripple (float) – ripple value for Chebyshev filter
+
+#apply high pass filter to provided data
+perform_highpass()
+#Param (Mesmos do perform_lowpass())
+
+#apply band pass filter to provided data (Intervalo de frequecias que podem passar)
+perform_bandpass()
+#Param (Semelhante aos dois métodos anteriores)
+    + start_freq (float) – start frequency
+    + stop_freq (float) – stop frequency
+
+#apply band stop filter to provided data (Intervalo de frequecias que não podem passar)
+perform_bandstop()
+#Param (Mesmo do anterior)
+
+#remove env noise using notch filter
+remove_environmental_noise()
+#Param
+    + data (NDArray[Float64]) – data to filter, filter works in-place
+    + sampling_rate (int) – board’s sampling rate
+    + noise_type (int) – noise type (Ver brainflow.data_filter.NoiseTypes)
+
+#write data to file, in file data will be transposed
+write_file(data, file_name: str, file_mode: str) -> None
+#Param
+    + data (2d numpy array) – data to store in a file
+    + file_name (str) – file name to store data
+    + file_mode (str) – ‘w’ to rewrite file or ‘a’ to append data to file
+
+#read data from file
+read_file(file_name: str)
+#Param
+    + file_name (str) – file name to read
+#Return
+    + 2d numpy array with data from this file, data will be transposed to original dimensions
