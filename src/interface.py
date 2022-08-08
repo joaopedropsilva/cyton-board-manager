@@ -7,22 +7,11 @@ from os import system
 def clear_screen():
     system('cls || clear')
 
-def get_input(text='Sua escolha: '):
+def pause():
+    input('Pressione enter para continuar...')
+
+def get_input(text: str = 'Sua escolha: ') -> str:
     return input(text)
-
-def check_int_type(arg):
-    if (arg.isdigit()):
-        return True
-    
-    return False
-
-def validate_input(session_number):
-    if (check_int_type(session_number)):
-        return session_number
-    else:
-        while not check_int_type(session_number):
-            session_number = get_input('Número da sessão inválido, tente novamente (tipo: int): ')
-    return session_number
 
 # Menu
 
@@ -35,9 +24,30 @@ def show_menu():
 
 # Data acquisition
 
-def get_session_name():
+#Lê o nome da sessão
+def get_session_name() -> str:
     return get_input('Nome da sessão: ')
 
-def get_session_number():
-    session_number = get_input('Número da sessão: ')
-    return validate_input(session_number)
+#Lê o número da sessão
+def get_session_number() -> int:
+
+    user_input = get_input('Número da sessão: ')
+
+    while True:
+        try:
+            #Se não for possível converter para int, significa que a entrada é inválida.
+            #Nesse caso, um erro é gerado e o loop continua.
+            session_number = int(user_input)
+            break
+        except:
+            user_input = get_input('Número da sessão inválido, tente novamente (tipo: int): ')
+    
+    return session_number
+
+#Para testar:
+opala = get_session_name()
+num = get_session_number()
+print(opala)
+if type(num) == int:
+    print(num)
+
