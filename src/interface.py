@@ -44,10 +44,10 @@ def get_session_number() -> int:
     
     return session_number
 
-#Para testar:
-opala = get_session_name()
-num = get_session_number()
-print(opala)
-if type(num) == int:
-    print(num)
-
+#para testar:
+if False:
+    nome = get_session_name()
+    num = get_session_number()
+    print(nome)
+    if type(num) == int:
+        print(num)
