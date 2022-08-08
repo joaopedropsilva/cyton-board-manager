@@ -6,11 +6,16 @@ Este software objetiva a coleta de dados de EEG a partir do capacete Ultracortex
 
 - `set_board.py` para configurar a placa corretamente
 - `interface.py` interface temporária em terminal
-- `get_data.py` para pegar os dados da placa e gravá-los em arquivos
 - `main.py` para integrar tudo
 
 ## Arquivo `main.py`:
 
 1. Inicializar a placa com `set_board.py`
-2. Pegar os inputs do usuário (nome, número, email, ...), ainda a ser decidido
-3. Usar o `get_data.py` para coletar os dados
+2. Pegar os inputs do usuário (nome, número, ...), ainda a ser decidido
+3. Inicializar a sessão e gravar no arquivo corretamente
+
+## Features a serem trabalhadas
+
+- Pré filtragem de dados com o próprio brainflow
+- Executável do programa
+- Programa em modo janela
