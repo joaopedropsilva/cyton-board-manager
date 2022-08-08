@@ -4,11 +4,8 @@ from os import system
 
 ## Auxiliary
 
-def clear_screen():
+def clear_screen() -> None:
     system('cls || clear')
-
-def pause():
-    input('Pressione enter para continuar...')
 
 def get_input(text: str = 'Sua escolha: ') -> str:
     return input(text)
@@ -28,8 +25,8 @@ def show_menu():
 def get_session_name() -> str:
     while True:
         session_name = get_input('Nome da sessão: ')
-        confirmar = get_input('Confirme [y/n]: ')
-        if confirmar.lower() == 'y': break
+        confirm = get_input('Confirme [y/n]: ')
+        if confirm.lower() == 'y': break
 
     return session_name
 
@@ -48,12 +45,14 @@ def get_session_number() -> int:
     
     return session_number
 
+# Volunteers
+
 #Lê o nome da pessoa
 def get_volunteer_name() -> str:
     while True:
         vol_name = get_input('Nome do voluntário: ')
-        confirmar = get_input('Confirme [y/n]: ')
-        if confirmar.lower() == 'y': break
+        confirm = get_input('Confirme [y/n]: ')
+        if confirm.lower() == 'y': break
     
     return vol_name
 
@@ -69,11 +68,3 @@ def get_volunteer_ID() -> int:
             user_input = get_input('Número da pessoa inválido, tente novamente (tipo: int): ')
     
     return vol_ID
-
-#para testar:
-if False:
-    nome = get_session_name()
-    num = get_session_number()
-    print(nome)
-    if type(num) == int:
-        print(num)
