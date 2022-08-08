@@ -40,7 +40,7 @@ def get_session_number() -> int:
             #Nesse caso, um erro é gerado e o loop continua.
             session_number = int(user_input)
             break
-        except:
+        except ValueError:
             user_input = get_input('Número da sessão inválido, tente novamente (tipo: int): ')
     
     return session_number
@@ -64,7 +64,7 @@ def get_volunteer_ID() -> int:
         try:
             vol_ID = int(user_input)
             break
-        except:
+        except ValueError:
             user_input = get_input('Número da pessoa inválido, tente novamente (tipo: int): ')
     
     return vol_ID
