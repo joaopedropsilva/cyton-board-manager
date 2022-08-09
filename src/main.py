@@ -21,7 +21,7 @@ def main():
     # TODO: check how the data is returned; official doc uses time.sleep
     if (CYTON_BOARD_CONFIGURED.is_prepared()):
         CYTON_BOARD_CONFIGURED.start_stream()
-        sleep(10)
+        sleep(3)
         data = CYTON_BOARD_CONFIGURED.get_board_data()
         CYTON_BOARD_CONFIGURED.stop_stream()
         CYTON_BOARD_CONFIGURED.release_session()
