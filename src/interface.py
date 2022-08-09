@@ -21,23 +21,17 @@ def show_menu():
 
 ## Data acquisition
 
-#Lê o nome da sessão
 def get_session_name() -> str:
     while True:
         session_name = get_input('Nome da sessão: ')
-        confirm = get_input('Confirme [y/n]: ')
-        if confirm.lower() == 'y': break
 
     return session_name
 
-#Lê o número da sessão
 def get_session_number() -> int:
     user_input = get_input('Número da sessão: ')
 
     while True:
         try:
-            #Se não for possível converter para int, significa que a entrada é inválida.
-            #Nesse caso, um erro é gerado e o loop continua.
             session_number = int(user_input)
             break
         except ValueError:
@@ -47,16 +41,12 @@ def get_session_number() -> int:
 
 # Volunteers
 
-#Lê o nome da pessoa
 def get_volunteer_name() -> str:
     while True:
         vol_name = get_input('Nome do voluntário: ')
-        confirm = get_input('Confirme [y/n]: ')
-        if confirm.lower() == 'y': break
     
     return vol_name
 
-#Lê o ID da pessoa
 def get_volunteer_ID() -> int:
     user_input = get_input('Número da pessoa: ')
 
