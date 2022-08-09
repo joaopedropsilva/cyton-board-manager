@@ -22,8 +22,7 @@ def show_menu():
 ## Data acquisition
 
 def get_session_name() -> str:
-    while True:
-        session_name = get_input('Nome da sessão: ')
+    session_name = get_input('Nome da sessão: ')
 
     return session_name
 
@@ -42,8 +41,7 @@ def get_session_number() -> int:
 # Volunteers
 
 def get_volunteer_name() -> str:
-    while True:
-        vol_name = get_input('Nome do voluntário: ')
+    vol_name = get_input('Nome do voluntário: ')
     
     return vol_name
 
