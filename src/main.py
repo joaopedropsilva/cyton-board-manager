@@ -5,7 +5,9 @@ import numpy as np
 from time import sleep
 
 import interface as interf
+import get_data as gd
 from set_board import CYTON_BOARD_CONFIGURED, CYTON_ID
+
 
 def main():
     interf.show_menu()
@@ -18,17 +20,14 @@ def main():
     BoardShim.enable_dev_board_logger()
     CYTON_BOARD_CONFIGURED.prepare_session()
 
-    # TODO: check how the data is returned; official doc uses time.sleep
-    if (CYTON_BOARD_CONFIGURED.is_prepared()):
-        CYTON_BOARD_CONFIGURED.start_stream()
-        sleep(3)
-        data = CYTON_BOARD_CONFIGURED.get_board_data()
-        CYTON_BOARD_CONFIGURED.stop_stream()
-        CYTON_BOARD_CONFIGURED.release_session()
+    data = gd.get_data(CYTON_BOARD_CONFIGURED, sampling_time = 3)
+    data = np.transpose(data)
 
     columns_df = CYTON_BOARD_CONFIGURED.get_eeg_names(CYTON_ID)
     columns_df.insert(0, 'Index')
-    data_df = pd.DataFrame(np.transpose(data)[: , :9], columns=columns_df)
+    columns_df.append(['other'*15])
+
+    data_df = pd.DataFrame(data, columns=columns_df)
     DataFilter.write_file(data, f'data/session_{session_name}-{session_number}.csv', 'w')
 
 
