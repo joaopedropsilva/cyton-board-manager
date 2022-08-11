@@ -18,9 +18,7 @@ def main():
     volunteer_id = interf.get_volunteer_ID()
 
     BoardShim.enable_dev_board_logger()
-    CYTON_BOARD_CONFIGURED.prepare_session()
-
-    data = gd.get_data(CYTON_BOARD_CONFIGURED, sampling_time = 3)
+    data = gd.get_data(sampling_time = 3)
     data = np.transpose(data)
 
     columns_df = CYTON_BOARD_CONFIGURED.get_eeg_names(CYTON_ID)
