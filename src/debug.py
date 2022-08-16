@@ -12,15 +12,24 @@ def debug():
     session_number = interf.get_session_number()
     BoardShim.enable_dev_board_logger()
     data = gd.get_data(sampling_time = 3)
-    data = np.transpose(data)
 
-    columns_df = CYTON_BOARD_CONFIGURED.get_eeg_names(CYTON_ID)
-    columns_df.insert(0, 'Index')
-    columns_df.append(['other'*15])
-
-    data_df = pd.DataFrame(data, columns=columns_df)
+    # File writing raw
     DataFilter.write_file(data, f'data/debug-session_{session_number}.csv', 'w')
 
+    # Column naming
+    columns_df = CYTON_BOARD_CONFIGURED.get_eeg_names(CYTON_ID)
+    columns_df.insert(0, 'Index')
+    for num in range(12):
+        columns_df.append('other')
+    columns_df.append('Timestamp')
+    columns_df.append('other')
+    columns_df.append('Timestamp (Formatted)')
+
+    # File writing with columns
+    data_raw = pd.read_csv(f'data/debug-session_{session_number}.csv')
+    print(columns_df)
+    input()
+    data_raw.to_csv(f'data_view/debug-session_{session_number}_formatted.csv', columns=columns_df)
 
 if __name__ == '__main__':
     debug()
