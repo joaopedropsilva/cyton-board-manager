@@ -2,7 +2,6 @@ from brainflow.board_shim import BoardShim, BoardIds
 from brainflow.data_filter import DataFilter
 import pandas as pd
 import numpy as np
-from time import sleep
 
 import interface as interf
 import get_data as gd
