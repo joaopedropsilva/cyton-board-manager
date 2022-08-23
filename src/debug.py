@@ -12,7 +12,8 @@ from set_board import CYTON_BOARD_CONFIGURED, CYTON_ID
 def debug():
     session_number = interf.get_session_number()
     BoardShim.enable_dev_board_logger()
-    data = gd.get_data(sampling_time = 3)
+
+    data = gd.get_data(sampling_time = 20)
 
     # File writing raw
     DataFilter.write_file(data, f'data_raw/debug-session_{session_number}.csv', 'w')
