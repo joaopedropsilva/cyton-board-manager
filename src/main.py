@@ -2,7 +2,6 @@ from brainflow.board_shim import BoardShim, BoardIds
 from brainflow.data_filter import DataFilter
 import pandas as pd
 import numpy as np
-from time import sleep
 
 import interface as interf
 import get_data as gd
@@ -26,7 +25,7 @@ def main():
     columns_df.append(['other'*15])
 
     data_df = pd.DataFrame(data, columns=columns_df)
-    DataFilter.write_file(data, f'data/session_{session_name}-{session_number}.csv', 'w')
+    DataFilter.write_file(data, f'data_raw/session_{session_name}-{session_number}.csv', 'w')
 
 
 if __name__ == '__main__':
