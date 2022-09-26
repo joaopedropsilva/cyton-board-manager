@@ -1,0 +1,12 @@
+name: cyton_man
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - pip
+  - pip:
+      - brainflow
+      - pynput
+prefix: /opt/anaconda3/envs/cyton_man
