@@ -8,7 +8,7 @@ import get_data as gd
 from set_board import CYTON_BOARD_CONFIGURED, CYTON_ID
 
 
-def main(): -> None
+def main() -> None:
     interf.show_menu()
     session_number = interf.get_session_number()
 
