@@ -1,5 +1,3 @@
-# Terminal interface procedure
-
 from os import system
 
 ## Auxiliary
@@ -12,7 +10,7 @@ def get_input(text: str = 'Sua escolha: ') -> str:
 
 # Menu
 
-def show_menu():
+def show_menu(): -> None
     clear_screen()
     print('=' * 45, '\n')
     print('\tOpenBCI Ultracortex Mark IV\n')
@@ -20,11 +18,6 @@ def show_menu():
     input('Pressione enter para continuar...')
 
 ## Data acquisition
-
-def get_session_name() -> str:
-    session_name = get_input('Nome da sessão: ')
-
-    return session_name
 
 def get_session_number() -> int:
     user_input = get_input('Número da sessão: ')
@@ -38,21 +31,3 @@ def get_session_number() -> int:
     
     return session_number
 
-# Volunteers
-
-def get_volunteer_name() -> str:
-    vol_name = get_input('Nome do voluntário: ')
-    
-    return vol_name
-
-def get_volunteer_ID() -> int:
-    user_input = get_input('Número da pessoa: ')
-
-    while True:
-        try:
-            vol_ID = int(user_input)
-            break
-        except ValueError:
-            user_input = get_input('Número da pessoa inválido, tente novamente (tipo: int): ')
-    
-    return vol_ID
