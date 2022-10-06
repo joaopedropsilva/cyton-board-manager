@@ -1,33 +1,64 @@
-from brainflow.board_shim import BoardShim, NDArray
-from pynput.keyboard import Listener, Key, HotKey
+from brainflow.board_shim import NDArray
+from pynput.keyboard import Listener, Key, KeyCode
 from nptyping import Float64
 from time import sleep
 
 from set_board import CYTON_BOARD_CONFIGURED as cyton
 
-def on_press(key: Key):
-    if key.char == 'p':
-        cyton.stop_stream()
-        print("fluxo de dados interrompido")
-    elif key.char == 's':
-        cyton.start_stream()
-        print("fluxo de dados retomado")
+class Controller():
+    def __init__(self) -> None:
+        self.main_loop_state = True
+        self.connection_status = False
 
-def start_listener():
-    listener = Listener(on_press = on_press)
-    listener.start()
+def on_press(key) -> None:
+    if type(key) is KeyCode:
+        if key.char == 'p':
+            try:
+                cyton.stop_stream()
+                print("--> Interrompendo fluxo de dados")
+            except Exception:
+                print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
+        elif key.char == 's':
+            try:
+                cyton.start_stream()
+                print("--> Retomando fluxo de dados")
+            except Exception:
+                print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
+    elif type(key) is Key:
+        if key == Key.esc:
+            try:
+                cyton.stop_stream()
+                print('--> Encerrando sessão')
+                controller.main_loop_state = False
+            except Exception:
+                print('--> Encerrando sessão')
+                controller.main_loop_state = False
 
-def get_data(sampling_time: float = 10) -> NDArray[Float64]:
+# Initializing listeners and controllers
+listener = Listener(on_press = on_press)
+controller = Controller()
 
-    cyton.prepare_session()
+def get_data() -> NDArray[Float64]:
+    # Missing test for this new loop
+    while not controller.connection_status:
+        try:
+            cyton.prepare_session()
+            controller.connection_status = True
+        except Exception:
+            print('[WARNING] CONEXÃO COM A PLACA INDISPONÍVEL')
+            print('[WARNING] Verifique o estado do equipamento')
+
+            for time in range(5, 0, -1):
+                print(f'TENTANDO RECONEXÃO EM {time}...')
+                sleep(1)
 
     if cyton.is_prepared():
         cyton.start_stream()
-        start_listener()
-        sleep(sampling_time)
+        listener.start()
+        while controller.main_loop_state:
+            sleep(1)
+            
         data = cyton.get_board_data()
-        # TODO: tratar exceção do cyton.stop_stream
-        cyton.stop_stream()
         cyton.release_session()
 
         return data
