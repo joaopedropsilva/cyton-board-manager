@@ -10,7 +10,7 @@ def get_input(text: str = 'Sua escolha: ') -> str:
 
 # Menu
 
-def show_menu(): -> None
+def show_menu() -> None:
     clear_screen()
     print('=' * 45, '\n')
     print('\tOpenBCI Ultracortex Mark IV\n')

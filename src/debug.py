@@ -9,7 +9,7 @@ import get_data as gd
 from set_board import CYTON_BOARD_CONFIGURED, CYTON_ID
 
 
-def debug(): -> None
+def debug() -> None:
     interf.clear_screen()
     session_number = interf.get_session_number()
     BoardShim.enable_dev_board_logger()
