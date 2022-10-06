@@ -1,23 +1,28 @@
 # Cyton Board Manager
 
-Este software objetiva a coleta de dados de EEG a partir do capacete Ultracortex Mark IV da OpenBCI.
+This software is responsible to capture EEG signals from [Ultracortex Mark IV](https://docs.openbci.com/AddOns/Headwear/MarkIV/) an [OpenBCI](https://openbci.com) headgear
 
-## Arquivos fonte:
+## Project structure
 
-- `set_board.py` para configurar a placa corretamente
-- `get_data.py` para coletar dados
-- `interface.py` interface temporária em terminal
-- `main.py` para integrar tudo
+:white_check_mark: `set_board.py` configures the cyton board correctly
+:white_check_mark:  `get_data.py` gets all data from the hardware
+:white_check_mark: `interface.py` sets a collection of functions to run the application on terminal mode
+:white_check_mark: `main.py` uses the other files to generate the formatted file outputs
 
-## Arquivo `main.py`:
+## Upcoming features
 
-1. Inicializar a placa com `set_board.py`
-2. Pegar os inputs da sessão (nome e número) e do usuário (nome e número) com `interface.py`
-3. Inicializar a sessão e coletar os dados utilizando o `get_data.py`
-4. Gravar os dados em um arquivo cvs formatado e com cabeçalho
+:pushpin: Pre-filtering and data denoising with BrainFlow
+:pushpin: Fancier terminal interface
 
-## Features a serem trabalhadas
+## Used technologies
 
-- Pré filtragem de dados com o próprio brainflow
-- Executável do programa
-- Programa em modo janela
+<div style="display: flex; justify-content: flex-start">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" />
+<img src="httpscdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original-wordmark.svg" />
+</div>
+
+## Other featured technologies
+
+:wrench: [BrainFlow](https://brainflow.org)
+:wrench: [pynput](https://pynput.readthedocs.io/en/latest/#)
