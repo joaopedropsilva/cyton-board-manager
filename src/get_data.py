@@ -5,11 +5,10 @@ from time import sleep
 
 from set_board import CYTON_BOARD_CONFIGURED as cyton
 
-class LoopController():
+class Controller():
     def __init__(self) -> None:
-        self.state = True
-
-loop_controller = LoopController()
+        self.main_loop_state = True
+        self.connection_status = False
 
 def on_press(key) -> None:
     if type(key) is KeyCode:
@@ -30,31 +29,33 @@ def on_press(key) -> None:
             try:
                 cyton.stop_stream()
                 print('--> Encerrando sessão')
-                loop_controller.state = False
+                controller.main_loop_state = False
             except Exception:
                 print('--> Encerrando sessão')
-                loop_controller.state = False
+                controller.main_loop_state = False
 
+# Initializing listeners and controllers
 listener = Listener(on_press = on_press)
+controller = Controller()
 
 def get_data() -> NDArray[Float64]:
-    try:
-        cyton.prepare_session()
-    except Exception:
-        print('[WARNING] CONEXÃO COM A PLACA INDISPONÍVEL')
-        print('[WARNING] Verifique o estado do equipamento')
+    # Missing test for this new loop
+    while not controller.connection_status:
+        try:
+            cyton.prepare_session()
+            controller.connection_status = True
+        except Exception:
+            print('[WARNING] CONEXÃO COM A PLACA INDISPONÍVEL')
+            print('[WARNING] Verifique o estado do equipamento')
 
-        for time in range(10, 0, -1):
-            print(f'ENCERRANDO PROGRAMA EM {time}...')
-            sleep(1)
-        
-        exit(1)
+            for time in range(5, 0, -1):
+                print(f'TENTANDO RECONEXÃO EM {time}...')
+                sleep(1)
 
     if cyton.is_prepared():
-
         cyton.start_stream()
         listener.start()
-        while loop_controller.state:
+        while controller.main_loop_state:
             sleep(1)
             
         data = cyton.get_board_data()
