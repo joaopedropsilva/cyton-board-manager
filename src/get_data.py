@@ -31,6 +31,18 @@ def on_press(key) -> None:
         except Exception:
             print('[Q]UIT --> Encerrando sessão')
             controller.main_loop_state = False
+    # Missing test for this option
+    # Check if start_session() really resets timestamps 
+    elif key.char == 'r':
+        try:
+            cyton.stop_stream()
+            print('[R]ESET --> Reiniciando sessão')
+            cyton.get_board_data()
+            cyton.start_session()
+        except Exception:
+            print('[R]ESET --> Reiniciando sessão')
+            cyton.get_board_data()
+            cyton.start_session()
 
 # Initializing listeners and controllers
 listener = Listener(on_press = on_press)
@@ -42,6 +54,17 @@ def get_data() -> NDArray[Float64]:
         try:
             cyton.prepare_session()
             controller.connection_status = True
+
+            if cyton.is_prepared():
+                cyton.start_stream()
+                listener.start()
+                while controller.main_loop_state:
+                    sleep(1)
+                    
+                data = cyton.get_board_data()
+                cyton.release_session()
+
+                return data
         except Exception:
             print('[WARNING] CONEXÃO COM A PLACA INDISPONÍVEL')
             print('[WARNING] Verifique o estado do equipamento')
@@ -50,13 +73,3 @@ def get_data() -> NDArray[Float64]:
                 print(f'TENTANDO RECONEXÃO EM {time}...')
                 sleep(1)
 
-    if cyton.is_prepared():
-        cyton.start_stream()
-        listener.start()
-        while controller.main_loop_state:
-            sleep(1)
-            
-        data = cyton.get_board_data()
-        cyton.release_session()
-
-        return data
