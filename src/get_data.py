@@ -1,5 +1,5 @@
 from brainflow.board_shim import NDArray
-from pynput.keyboard import Listener, Key, KeyCode
+from pynput.keyboard import Listener
 from nptyping import Float64
 from time import sleep
 
@@ -11,28 +11,26 @@ class Controller():
         self.connection_status = False
 
 def on_press(key) -> None:
-    if type(key) is KeyCode:
-        if key.char == 'p':
-            try:
-                cyton.stop_stream()
-                print("--> Interrompendo fluxo de dados")
-            except Exception:
-                print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
-        elif key.char == 's':
-            try:
-                cyton.start_stream()
-                print("--> Retomando fluxo de dados")
-            except Exception:
-                print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
-    elif type(key) is Key:
-        if key == Key.esc:
-            try:
-                cyton.stop_stream()
-                print('--> Encerrando sessão')
-                controller.main_loop_state = False
-            except Exception:
-                print('--> Encerrando sessão')
-                controller.main_loop_state = False
+    if key.char == 's':
+        try:
+            cyton.stop_stream()
+            print("[S]TOP --> Interrompendo fluxo de dados")
+        except Exception:
+            print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
+    elif key.char == 'w':
+        try:
+            cyton.start_stream()
+            print("[W]RITE --> Retomando fluxo de dados")
+        except Exception:
+            print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
+    elif key.char == 'q':
+        try:
+            cyton.stop_stream()
+            print('[Q]UIT --> Encerrando sessão')
+            controller.main_loop_state = False
+        except Exception:
+            print('[Q]UIT --> Encerrando sessão')
+            controller.main_loop_state = False
 
 # Initializing listeners and controllers
 listener = Listener(on_press = on_press)
