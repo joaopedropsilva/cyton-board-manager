@@ -13,7 +13,7 @@ from set_board import CYTON_ID
 from filter import default_filtering
 from filter import CYTON_SAMPLING_RATE
 
-# Real time plotting
+# Real time plot
 
 class Graph:
     def __init__(self, board_shim, session_number) -> None:
