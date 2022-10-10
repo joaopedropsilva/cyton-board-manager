@@ -5,27 +5,33 @@ from time import sleep
 
 from set_board import CYTON_BOARD_CONFIGURED as cyton
 
+
 # Possible file separation, too much definitions in a script file
 class Controller():
     def __init__(self) -> None:
         self.main_loop_state = True
         self.connection_status = False
+        self.exec_permission = True
+
 
 def set_timeout_for_operation(time: int = 3, operation: str = '[No operation defined]') -> None:
-    print(f'{operation} sessão em:\n(Pressione [A] para abortar operação)')
-    for i in range(time, 0, -1):
+    print(f'{operation} sessão em: {time} segundos\n(Pressione [A] para abortar operação)')
+
+    for _ in range(time, 0, -1):
         sleep(1)
-        print(f'{time}...')
         time -= 1
+
 
 def quit_session_procedure(board: BoardShim) -> None:
     print('[Q]UIT --> Encerrando sessão')
     controller.main_loop_state = False
 
+
 def reset_session_procedure(board: BoardShim) -> None:
     print('[R]ESET --> Reiniciando sessão')
     cyton.get_board_data()
     cyton.start_session()
+
 
 def on_press(key) -> None:
     if key.char == 's':
@@ -43,26 +49,38 @@ def on_press(key) -> None:
     elif key.char == 'q':
         try:
             set_timeout_for_operation(operation='Encerrando')
-            cyton.stop_stream()
-            quit_session_procedure(cyton)
+            if controller.exec_permission:
+                cyton.stop_stream()
+                quit_session_procedure(cyton)
+            controller.exec_permission = True
         except Exception:
             quit_session_procedure(cyton)
+            controller.exec_permission = True
     # Missing test for this option
     # Check if start_session() really resets timestamps 
     elif key.char == 'r':
         try:
             set_timeout_for_operation(operation='Reiniciando')
-            cyton.stop_stream()
-            reset_session_procedure(cyton)
+            if controller.exec_permission:
+                cyton.stop_stream()
+                reset_session_procedure(cyton)
+            controller.exec_permission = True
         except Exception:
             reset_session_procedure(cyton)
-    # Not working properly
-    elif key.char == 'a':
-        print('[A]BORT --> Abortando operação')
+            controller.exec_permission = True
+
+
+def on_press_abort(key): 
+  if key.char == 'a':
+    controller.exec_permission = False
+    print('[A]BORT --> Abortando operação')
+
 
 # Initializing listeners and controllers
-listener = Listener(on_press = on_press)
+regular_listener = Listener(on_press = on_press)
+abort_listener = Listener(on_press = on_press_abort)
 controller = Controller()
+
 
 def get_data() -> NDArray[Float64]:
     # Missing test for this new loop
@@ -73,7 +91,9 @@ def get_data() -> NDArray[Float64]:
 
             if cyton.is_prepared():
                 cyton.start_stream()
-                listener.start()
+                regular_listener.start()
+                abort_listener.start()
+
                 while controller.main_loop_state:
                     sleep(1)
                     
