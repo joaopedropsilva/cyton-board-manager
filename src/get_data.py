@@ -5,10 +5,27 @@ from time import sleep
 
 from set_board import CYTON_BOARD_CONFIGURED as cyton
 
+# Possible file separation, too much definitions in a script file
 class Controller():
     def __init__(self) -> None:
         self.main_loop_state = True
         self.connection_status = False
+
+def set_timeout_for_operation(time: int = 3, operation: str = '[No operation defined]') -> None:
+    print(f'{operation} sessão em:\n(Pressione [A] para abortar operação)')
+    for i in range(time, 0, -1):
+        sleep(1)
+        print(f'{time}...')
+        time -= 1
+
+def quit_session_procedure(board: BoardShim) -> None:
+    print('[Q]UIT --> Encerrando sessão')
+    controller.main_loop_state = False
+
+def reset_session_procedure(board: BoardShim) -> None:
+    print('[R]ESET --> Reiniciando sessão')
+    cyton.get_board_data()
+    cyton.start_session()
 
 def on_press(key) -> None:
     if key.char == 's':
@@ -25,24 +42,23 @@ def on_press(key) -> None:
             print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
     elif key.char == 'q':
         try:
+            set_timeout_for_operation(operation='Encerrando')
             cyton.stop_stream()
-            print('[Q]UIT --> Encerrando sessão')
-            controller.main_loop_state = False
+            quit_session_procedure(cyton)
         except Exception:
-            print('[Q]UIT --> Encerrando sessão')
-            controller.main_loop_state = False
+            quit_session_procedure(cyton)
     # Missing test for this option
     # Check if start_session() really resets timestamps 
     elif key.char == 'r':
         try:
+            set_timeout_for_operation(operation='Reiniciando')
             cyton.stop_stream()
-            print('[R]ESET --> Reiniciando sessão')
-            cyton.get_board_data()
-            cyton.start_session()
+            reset_session_procedure(cyton)
         except Exception:
-            print('[R]ESET --> Reiniciando sessão')
-            cyton.get_board_data()
-            cyton.start_session()
+            reset_session_procedure(cyton)
+    # Not working properly
+    elif key.char == 'a':
+        print('[A]BORT --> Abortando operação')
 
 # Initializing listeners and controllers
 listener = Listener(on_press = on_press)
