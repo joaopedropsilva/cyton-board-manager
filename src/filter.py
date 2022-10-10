@@ -4,6 +4,7 @@ from brainflow.board_shim import BoardShim, NDArray
 from set_board import CYTON_ID
 from nptyping import Float64
 
+#Mover para set_board.py quando possível
 CYTON_SAMPLING_RATE = BoardShim.get_sampling_rate(CYTON_ID)
 
 # Filters:
