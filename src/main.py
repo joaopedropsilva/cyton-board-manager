@@ -37,5 +37,6 @@ def main() -> None:
     data_df["Timestamp (Formatted)"] = timestamps
     data_df.to_csv(f'data_formatted/debug-session_{session_number}_formatted.csv', sep='\t')
 
+
 if __name__ == '__main__':
     main()

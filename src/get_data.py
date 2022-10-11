@@ -97,7 +97,7 @@ def on_press(key) -> None:
         reset_session_procedure()
 
 
-def on_press_abort(key): 
+def on_press_abort(key) -> None: 
   if key.char == 'a':
     abort_procedure()
 
