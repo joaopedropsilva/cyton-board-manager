@@ -10,5 +10,6 @@ args = parser.parse_args()
 params = BrainFlowInputParams()
 params.serial_port = args.serial_port
 
-CYTON_BOARD_CONFIGURED = BoardShim(args.board_id, params)
 CYTON_ID = BoardIds.CYTON_BOARD.value
+CYTON_BOARD_CONFIGURED = BoardShim(args.board_id, params)
+CYTON_SAMPLING_RATE = BoardShim.get_sampling_rate(CYTON_ID)
