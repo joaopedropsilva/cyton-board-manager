@@ -21,59 +21,72 @@ def set_timeout_for_operation(time: int = 3, operation: str = '[No operation def
         sleep(1)
         time -= 1
 
+def stop_stream_procedure() -> None:
+    try:
+        cyton.stop_stream()
+        print("[S]TOP --> Interrompendo fluxo de dados")
+    except Exception:
+        print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
 
-def quit_session_procedure(board: BoardShim) -> None:
-    print('[Q]UIT --> Encerrando sessão')
-    controller.main_loop_state = False
+def restart_stream_procedure() -> None:
+    try:
+        cyton.start_stream()
+        print("[W]RITE --> Retomando fluxo de dados")
+    except Exception:
+        print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
 
 
-def reset_session_procedure(board: BoardShim) -> None:
-    print('[R]ESET --> Reiniciando sessão')
-    cyton.get_board_data()
-    cyton.start_session()
+def quit_session_procedure() -> None:
+    try:
+        set_timeout_for_operation(operation='Encerrando')
+        if controller.exec_permission:
+            cyton.stop_stream()
+            print('[Q]UIT --> Encerrando sessão')
+            controller.main_loop_state = False
+        controller.exec_permission = True
+    except Exception:
+        print('[Q]UIT --> Encerrando sessão')
+        controller.main_loop_state = False
+        controller.exec_permission = True
+
+
+def reset_session_procedure() -> None:
+    try:
+        set_timeout_for_operation(operation='Reiniciando')
+        if controller.exec_permission:
+            cyton.stop_stream()
+            print('[R]ESET --> Reiniciando sessão')
+            cyton.get_board_data()
+            if cyton.is_prepared():
+                cyton.start_stream()
+        controller.exec_permission = True
+    except Exception:
+        print('[R]ESET --> Reiniciando sessão')
+        cyton.get_board_data()
+        if cyton.is_prepared():
+            cyton.start_stream()
+        controller.exec_permission = True
+
+
+def abort_procedure() -> None:
+    controller.exec_permission = False
+    print('[A]BORT --> Abortando operação')
 
 
 def on_press(key) -> None:
     if key.char == 's':
-        try:
-            cyton.stop_stream()
-            print("[S]TOP --> Interrompendo fluxo de dados")
-        except Exception:
-            print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
+        stop_stream_procedure()
     elif key.char == 'w':
-        try:
-            cyton.start_stream()
-            print("[W]RITE --> Retomando fluxo de dados")
-        except Exception:
-            print('[WARNING] FLUXO DE DADOS JÁ EM OCORRÊNCIA')
+        restart_stream_procedure()
     elif key.char == 'q':
-        try:
-            set_timeout_for_operation(operation='Encerrando')
-            if controller.exec_permission:
-                cyton.stop_stream()
-                quit_session_procedure(cyton)
-            controller.exec_permission = True
-        except Exception:
-            quit_session_procedure(cyton)
-            controller.exec_permission = True
-    # Missing test for this option
-    # Check if start_session() really resets timestamps 
+        quit_session_procedure()
     elif key.char == 'r':
-        try:
-            set_timeout_for_operation(operation='Reiniciando')
-            if controller.exec_permission:
-                cyton.stop_stream()
-                reset_session_procedure(cyton)
-            controller.exec_permission = True
-        except Exception:
-            reset_session_procedure(cyton)
-            controller.exec_permission = True
+        reset_session_procedure()
 
 
 def on_press_abort(key): 
   if key.char == 'a':
-    controller.exec_permission = False
-    print('[A]BORT --> Abortando operação')
+    abort_procedure()
 
 
 # Initializing listeners and controllers
@@ -83,7 +96,6 @@ controller = Controller()
 
 
 def get_data() -> NDArray[Float64]:
-    # Missing test for this new loop
     while not controller.connection_status:
         try:
             cyton.prepare_session()
