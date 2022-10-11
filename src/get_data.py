@@ -7,11 +7,12 @@ from set_board import CYTON_BOARD_CONFIGURED as cyton
 
 
 # Possible file separation, too much definitions in a script file
-class Controller():
+class Flags():
     def __init__(self) -> None:
         self.main_loop_state = True
         self.connection_status = False
         self.exec_permission = True
+        self.abort_permission = False
 
 
 def set_timeout_for_operation(time: int = 3, operation: str = '[No operation defined]') -> None:
@@ -38,39 +39,51 @@ def restart_stream_procedure() -> None:
 
 def quit_session_procedure() -> None:
     try:
+        flags.abort_permission = True
         set_timeout_for_operation(operation='Encerrando')
-        if controller.exec_permission:
+        if flags.exec_permission:
             cyton.stop_stream()
             print('[Q]UIT --> Encerrando sessão')
-            controller.main_loop_state = False
-        controller.exec_permission = True
+            flags.main_loop_state = False
+        else:
+            flags.abort_permission = False
+            flags.exec_permission = True
     except Exception:
         print('[Q]UIT --> Encerrando sessão')
-        controller.main_loop_state = False
-        controller.exec_permission = True
+        flags.main_loop_state = False
+
+
+def init_new_session() -> None:
+    cyton.get_board_data()
+    cyton.release_session()
+    cyton.prepare_session()
+
+    if cyton.is_prepared():
+        cyton.start_stream()
+        flags.abort_permission = False
+        flags.exec_permission = True
 
 
 def reset_session_procedure() -> None:
     try:
+        flags.abort_permission = True
         set_timeout_for_operation(operation='Reiniciando')
-        if controller.exec_permission:
+        if flags.exec_permission:
             cyton.stop_stream()
             print('[R]ESET --> Reiniciando sessão')
-            cyton.get_board_data()
-            if cyton.is_prepared():
-                cyton.start_stream()
-        controller.exec_permission = True
+            init_new_session()
+        else:
+            flags.abort_permission = False
+            flags.exec_permission = True
     except Exception:
         print('[R]ESET --> Reiniciando sessão')
-        cyton.get_board_data()
-        if cyton.is_prepared():
-            cyton.start_stream()
-        controller.exec_permission = True
+        init_new_session()
 
 
 def abort_procedure() -> None:
-    controller.exec_permission = False
-    print('[A]BORT --> Abortando operação')
+    if flags.abort_permission:
+        flags.exec_permission = False
+        print('[A]BORT --> Abortando operação')
 
 
 def on_press(key) -> None:
@@ -89,24 +102,24 @@ def on_press_abort(key):
     abort_procedure()
 
 
-# Initializing listeners and controllers
+# Initializing listeners and flagss
 regular_listener = Listener(on_press = on_press)
 abort_listener = Listener(on_press = on_press_abort)
-controller = Controller()
+flags = Flags()
 
 
 def get_data() -> NDArray[Float64]:
-    while not controller.connection_status:
+    while not flags.connection_status:
         try:
             cyton.prepare_session()
-            controller.connection_status = True
+            flags.connection_status = True
 
             if cyton.is_prepared():
                 cyton.start_stream()
                 regular_listener.start()
                 abort_listener.start()
 
-                while controller.main_loop_state:
+                while flags.main_loop_state:
                     sleep(1)
                     
                 data = cyton.get_board_data()
