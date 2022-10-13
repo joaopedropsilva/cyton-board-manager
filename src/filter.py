@@ -1,11 +1,8 @@
-from brainflow.data_filter import DataFilter, FilterTypes, AggOperations, NoiseTypes
-from brainflow.board_shim import BoardShim, NDArray
+from brainflow.data_filter import DataFilter, FilterTypes, NoiseTypes
+from brainflow.board_shim import NDArray
 
-from set_board import CYTON_ID
+from set_board import CYTON_SAMPLING_RATE
 from nptyping import Float64
-
-#Mover para set_board.py quando possível
-CYTON_SAMPLING_RATE = BoardShim.get_sampling_rate(CYTON_ID)
 
 # Filters:
 
