@@ -15,7 +15,7 @@ def debug() -> None:
     BoardShim.enable_dev_board_logger()
 
     data = gd.get_data(session_number)
-    
+
     # File writing raw
     DataFilter.write_file(data, f'data_raw/debug-session_{session_number}.csv', 'w')
 
