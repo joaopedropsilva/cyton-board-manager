@@ -14,8 +14,8 @@ def debug() -> None:
     session_number = interf.get_session_number()
     BoardShim.enable_dev_board_logger()
 
-    data = gd.get_data()
-
+    data = gd.get_data(session_number)
+    
     # File writing raw
     DataFilter.write_file(data, f'data_raw/debug-session_{session_number}.csv', 'w')
 
