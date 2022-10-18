@@ -4,6 +4,7 @@ from nptyping import Float64
 from time import sleep
 
 from set_board import CYTON_BOARD_CONFIGURED as cyton
+from plotting import Graph
 
 
 # Possible file separation, too much definitions in a script file
@@ -102,13 +103,13 @@ def on_press_abort(key) -> None:
     abort_procedure()
 
 
-# Initializing listeners and flagss
+# Initializing listeners and flags
 regular_listener = Listener(on_press = on_press)
 abort_listener = Listener(on_press = on_press_abort)
 flags = Flags()
 
 
-def get_data() -> NDArray[Float64]:
+def get_data(session_number: int = 0) -> NDArray[Float64]:
     while not flags.connection_status:
         try:
             cyton.prepare_session()
@@ -118,6 +119,7 @@ def get_data() -> NDArray[Float64]:
                 cyton.start_stream()
                 regular_listener.start()
                 abort_listener.start()
+                Graph(cyton, session_number)
 
                 while flags.main_loop_state:
                     sleep(1)
@@ -133,4 +135,3 @@ def get_data() -> NDArray[Float64]:
             for time in range(5, 0, -1):
                 print(f'TENTANDO RECONEXÃO EM {time}...')
                 sleep(1)
-
