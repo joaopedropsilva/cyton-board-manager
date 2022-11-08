@@ -52,8 +52,8 @@ class Graph:
 
     def update(self):
         data = self.board_shim.get_current_board_data(self.num_points)
+        default_filtering(data)
         for count, channel in enumerate(self.eeg_channels):
-            # default_filtering(data)
             self.curves[count].setData(data[channel].tolist())
         self.app.processEvents()
 
