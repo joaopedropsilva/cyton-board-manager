@@ -1,5 +1,5 @@
 from brainflow.board_shim import NDArray
-from pynput.keyboard import Listener
+from pynput.keyboard import Listener, Key
 from nptyping import Float64
 from time import sleep
 
@@ -23,12 +23,14 @@ def set_timeout_for_operation(time: int = 3, operation: str = '[No operation def
         sleep(1)
         time -= 1
 
+
 def stop_stream_procedure() -> None:
     try:
         cyton.stop_stream()
         print("[S]TOP --> Interrompendo fluxo de dados")
     except Exception:
         print('[WARNING] FLUXO DE DADOS JÁ INTERROMPIDO')
+
 
 def restart_stream_procedure() -> None:
     try:
@@ -88,6 +90,9 @@ def abort_procedure() -> None:
 
 
 def on_press(key) -> None:
+    if type(key) is Key:
+        return
+
     if key.char == 's':
         stop_stream_procedure()
     elif key.char == 'w':
@@ -98,9 +103,12 @@ def on_press(key) -> None:
         reset_session_procedure()
 
 
-def on_press_abort(key) -> None: 
-  if key.char == 'a':
-    abort_procedure()
+def on_press_abort(key) -> None:
+    if type(key) is Key:
+        return
+
+    if key.char == 'a':
+        abort_procedure()
 
 
 # Initializing listeners and flags
@@ -123,7 +131,7 @@ def get_data(session_number: int = 0) -> NDArray[Float64]:
 
                 while flags.main_loop_state:
                     sleep(1)
-                    
+                
                 data = cyton.get_board_data()
                 cyton.release_session()
 
