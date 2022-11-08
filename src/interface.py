@@ -12,9 +12,9 @@ def get_input(text: str = 'Sua escolha: ') -> str:
 
 def show_menu() -> None:
     clear_screen()
-    print('=' * 45, '\n')
-    print('\tOpenBCI Ultracortex Mark IV\n')
-    print('=' * 45, '\n')
+    print('=' * 37, '\n')
+    print('\tCyton Board Manager\n')
+    print('=' * 37, '\n')
     input('Pressione enter para continuar...')
 
 ## Data acquisition
