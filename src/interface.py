@@ -19,6 +19,6 @@ def show_menu() -> None:
 
 ## Data acquisition
 
-def get_session_name() -> int:
+def get_session_name() -> str:
    return get_input('Nome da sessão: ')
 

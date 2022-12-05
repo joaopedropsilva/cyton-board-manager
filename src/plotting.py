@@ -1,13 +1,7 @@
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtGui, QtCore
-from brainflow.board_shim import BoardShim, NDArray
-import pandas as pd
-import numpy as np
-from nptyping import Float64
-import matplotlib
+from brainflow.board_shim import BoardShim 
 
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
 from set_board import CYTON_ID, CYTON_SAMPLING_RATE
 from filter import default_filtering
@@ -56,11 +50,3 @@ class Graph:
         for count, channel in enumerate(self.eeg_channels):
             self.curves[count].setData(data[channel].tolist())
         self.app.processEvents()
-
-# Visualize data
-def plot_data_png(data: NDArray[Float64], figure_name: str = "data") -> None:
-    eeg_channels = BoardShim.get_eeg_channels(CYTON_ID)
-    df = pd.DataFrame(np.transpose(data))
-    plt.figure()
-    df[eeg_channels].plot(subplots=True)
-    plt.savefig(f'{figure_name}.png')
