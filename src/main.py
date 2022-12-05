@@ -10,12 +10,12 @@ from set_board import CYTON_BOARD_CONFIGURED, CYTON_ID
 
 def main() -> None:
     interf.show_menu()
-    session_number = interf.get_session_number()
+    session_name = interf.get_session_name()
 
     data = gd.get_data()
 
     # File writing raw
-    DataFilter.write_file(data, f'data_raw/debug-session_{session_number}.csv', 'w')
+    DataFilter.write_file(data, f'data_raw/debug-session_{session_name}.csv', 'w')
 
     # Generating timestamp formatted
     timestamps: str = [] 
@@ -32,10 +32,10 @@ def main() -> None:
     columns_df.append('other')
 
     # File writing with columns
-    data_raw = np.genfromtxt(f'data_raw/debug-session_{session_number}.csv', delimiter='\t')
+    data_raw = np.genfromtxt(f'data_raw/debug-session_{session_name}.csv', delimiter='\t')
     data_df = pd.DataFrame(data_raw, columns=columns_df)
     data_df["Timestamp (Formatted)"] = timestamps
-    data_df.to_csv(f'data_formatted/debug-session_{session_number}_formatted.csv', sep='\t')
+    data_df.to_csv(f'data_formatted/debug-session_{session_name}_formatted.csv', sep='\t')
 
 
 if __name__ == '__main__':

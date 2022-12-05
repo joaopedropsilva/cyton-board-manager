@@ -19,15 +19,6 @@ def show_menu() -> None:
 
 ## Data acquisition
 
-def get_session_number() -> int:
-    user_input = get_input('Número da sessão: ')
-
-    while True:
-        try:
-            session_number = int(user_input)
-            break
-        except ValueError:
-            user_input = get_input('Número da sessão inválido, tente novamente (tipo: int): ')
-    
-    return session_number
+def get_session_name() -> int:
+   return get_input('Nome da sessão: ')
 
